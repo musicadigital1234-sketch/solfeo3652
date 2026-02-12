@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solfeo 365</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand"><span class="logo"></span> Solfeo 365</div>
+      <div class="badge">Ejercicios diarios · ≤ 1 minuto</div>
+    </div>
+
+    <section class="hero">
+      <h1>Solfeo diario, sin fricción.</h1>
+      <p>Un ejercicio corto por día para entrenar lectura rítmica y melódica. Entra, reproduce y listo.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h2>Hoy</h2>
+          <p class="small" id="todayText">Cargando…</p>
+          <div class="row" style="margin-top:10px">
+            <a id="todayLink" class="btn primary" href="#">Ver ejercicio de hoy</a>
+            <a class="btn" href="/dia/?d=001">Ir al día 001</a>
+          </div>
+          <p class="small" style="margin-top:10px">Tip: comparte links como <code>/dia/?d=042</code></p>
+        </div>
+
+        <div class="card">
+          <h2>Ir a un día</h2>
+          <form id="goForm" class="row" style="margin-top:10px">
+            <input class="input" id="dayInput" type="number" min="1" max="365" placeholder="1–365" required />
+            <button class="btn" type="submit">Ir</button>
+          </form>
+          <p class="small" style="margin-top:10px">Tu progreso puede ser manual (favoritos) o automático (más adelante).</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">© <span id="year"></span> Solfeo 365</div>
+  </div>
+
+  <script>
+    function dayOfYear(date){
+      const start = new Date(date.getFullYear(), 0, 0);
+      return Math.floor((date - start) / (1000*60*60*24));
+    }
+    const now = new Date();
+    const doy = Math.min(Math.max(dayOfYear(now), 1), 365);
+    const d = String(doy).padStart(3, "0");
+
+    document.getElementById("todayText").textContent = `Día ${d} (día ${doy} del año)`;
+    document.getElementById("todayLink").href = `/dia/?d=${d}`;
+    document.getElementById("year").textContent = now.getFullYear();
+
+    document.getElementById("goForm").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const n = Number(document.getElementById("dayInput").value);
+      if(!Number.isFinite(n) || n<1 || n>365) return;
+      window.location.href = `/dia/?d=${String(n).padStart(3,"0")}`;
+    });
+  </script>
+</body>
+</html>

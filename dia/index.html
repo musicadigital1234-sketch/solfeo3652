@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ejercicio · Solfeo 365</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand"><span class="logo"></span> Solfeo 365</div>
+      <a class="badge" href="/">Inicio</a>
+    </div>
+
+    <section class="hero">
+      <h1 id="title">Día 001</h1>
+      <p id="subtitle">Ejercicio diario (≤ 1 minuto)</p>
+
+      <div class="videoWrap" style="margin-top:14px">
+        <video id="player" controls playsinline controlsList="nodownload">
+          <source id="src" type="video/mp4" />
+          Tu navegador no soporta video.
+        </video>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <a id="prev" class="btn" href="#">← Anterior</a>
+        <a class="btn" href="/">Inicio</a>
+        <a id="next" class="btn primary" href="#">Siguiente →</a>
+      </div>
+
+      <p class="small" id="debug" style="margin-top:10px"></p>
+    </section>
+
+    <div class="footer">Si un video no carga, revisa que exista <code>001.mp4</code> en R2.</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const n = Math.min(Math.max(parseInt(params.get("d") || "1", 10) || 1, 1), 365);
+    const d = String(n).padStart(3, "0");
+
+    document.getElementById("title").textContent = `Día ${d}`;
+
+    // IMPORTANTÍSIMO: videos van por /v/ (Pages Function + R2 binding)
+    const url = `/v/${d}.mp4`;
+    document.getElementById("src").src = url;
+    document.getElementById("player").load();
+
+    document.getElementById("prev").href = `/dia/?d=${String(Math.max(n-1,1)).padStart(3,"0")}`;
+    document.getElementById("next").href = `/dia/?d=${String(Math.min(n+1,365)).padStart(3,"0")}`;
+
+    document.getElementById("debug").textContent = `Video: ${url}`;
+
+    // anti-descarga básica (no es seguridad real)
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+</body>
+</html>
